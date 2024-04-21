@@ -23,7 +23,7 @@
 
 <br>
 
-4. 아파치&톰캣 상황 부여, 올바르게 돌아가도록 설정파일 수정
+4. 아파치&톰캣 상황 부여, 올바르게 돌아가도록 설정파일 수정(was여러개, 각각 다른 app이 있는 경우)
 - /etc/libapache2-mod-jk/workers-properties 수정
 ```
 #/etc/libapache2-mod-jk/workers-properties
@@ -40,7 +40,20 @@ worker.was2.port=port2(해당 port)
 worker.was2.host=ip2 (해당 ip)
 worker.was2.type=ajp13
 
-반복...
+# 반복...
+```
+- /etc/apache2/sites-available/000-default.conf 수정
+```
+#/etc/apache2/sites-available/000-default.conf
+
+<VirtualHost *:80>
+  ServerName 127.0.0.1
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/html 
+  JkMount /app1/* was1
+  JkMount /app2/* was2
+  JkMount /app3/* was3
+</VirtualHost>
 ```
 
 <br>
