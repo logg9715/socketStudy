@@ -31,12 +31,16 @@
 workers.tomcat_home=/var/lib/tomcat9
 workers.java_home=/usr/lib/jvm/default-java
 worker.list=was1,was2,was3
+
 worker.was1.port=port1(해당 port)
 worker.was1.host=ip1(해당 ip)
 worker.was1.type=ajp13 
+
 worker.was2.port=port2(해당 port)
 worker.was2.host=ip2 (해당 ip)
-worker.was2.type=ajp13 
+worker.was2.type=ajp13
+
+반복...
 ```
 
 <br>
