@@ -24,7 +24,20 @@
 <br>
 
 4. 아파치&톰캣 상황 부여, 올바르게 돌아가도록 설정파일 수정
-- 3주차 32페이지 실습6 참조
+- /etc/libapache2-mod-jk/workers-properties 수정
+'''
+#/etc/libapache2-mod-jk/workers-properties
+workers.tomcat_home=/var/lib/tomcat9
+workers.java_home=/usr/lib/jvm/default-java
+worker.list=was1,was2,was3
+worker.was1.port=port1(해당 port)
+worker.was1.host=ip1(해당 ip)
+worker.was1.type=ajp13 
+worker.was2.port=port2(해당 port)
+worker.was2.host=ip2 (해당 ip)
+worker.was2.type=ajp13 
+
+'''
 
 <br>
 
