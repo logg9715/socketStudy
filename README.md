@@ -53,6 +53,7 @@ worker.was2.type=ajp13
   JkMount /app1/* was1
   JkMount /app2/* was2
   JkMount /app3/* was3
+  # 이 경우에는 url에 /app1/..이 오면 이 이후로는 무조건 was1의 app을 찾아간다.
 </VirtualHost>
 ```
 
