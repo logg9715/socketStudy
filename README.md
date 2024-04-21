@@ -81,5 +81,5 @@ worker.was2.type=ajp13
 ## 리눅스 관련 문제 예측
 
 - 텔넷 접속 : telnet 192.168.0.10
--ssh 접속 : ssh 아이디@ip주소
+- ssh 접속 : ssh 아이디@ip주소
 
