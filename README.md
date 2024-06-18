@@ -138,7 +138,7 @@ worker.was2.type=ajp13
 - 스케일 인 : 스케일 아웃을 줄이는 버젼
 <br>
 
-### 5. SPED의 로드밸런싱 4가지 방법 서술
+### 5. AWS의 로드밸런싱 4가지 방법 서술
 - 라운드로빈 Round Robin : 순서대로 서버를 선택
 - 해쉬 hash (Sticky Session) : 로드밸런서에 의해 클라이언트가 연결된 한 서버에만 계속 연결되는 방법
 - Least Connection : 연결수가 가장 적은 서버에 연결
