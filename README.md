@@ -127,7 +127,7 @@ worker.was2.type=ajp13
 ### 3. 클라우드 큰 종류 3가지 IAAS PAAS SASS 약어 설명, 정의 설명
 - IAAS : infrastructure as a service < 네트워킹, 컴퓨터 (가상 & 하드웨어), 데이터 저장공간 제공
 - PAAS : platform as a service < + 운영체제, 미들웨어, 런타임, DB 제공
-- SAAS : software of service < + 소프트웨어 제공
+- SAAS : software as a service < + 소프트웨어 제공
 
 
 ### 4. 로드벨런서, 스케일 업,(스케일 다운) 설명, 로드밸런서의 의미 설명
