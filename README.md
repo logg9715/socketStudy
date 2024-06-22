@@ -535,3 +535,39 @@ cksum_in(unsigned short *addr, int len)
 
 ## 웹서버
 
+### http 규격
+- Request Message : Request Line, Request Header, Entity Header, CRLF(Blank Line), Body
+- Response Message : Status Line, General Header, Response Header, Entity Header, CRLF(Blank Line), Body
+    
+- Request Line : 전송방식(get, post...) + url + http 버젼
+- Request Header : 추가 정보나 클라 정보를 서버에 전송 목적, 응답 유형이나 보안 인증 등
+- General Header : 전송에 필요한 일반 정보, Date, Connection, Cache-Control
+- Response Header : Status 헤더 외의 추가정보
+- Entity Header : Body에 대한 정보, 컨텐츠 타입이나 인코딩이나 길이 등
+- Status Line : 요청에 대한 성공이나 에러 코드 (200:성공, 201:post성공) (400:요청문법오류, 404:url오류, 500:서버 프로그램 오류)
+
+### 웹서버 코드
+- 클라가 보낸 Request Message의 Request Line 데이터 추출
+- strtok(*문자열, 자를문자); : 자를문자를 종료문자로 바꾸고 헤더 포인터 반환
+- 문자열이 null이면, 그전에 잘랐던 문자에서 다음 자를문자를 찾고 새로운 헤더 포인터 반환
+```C
+if ((n = read(c_sock, rcvBuf, BUFSIZ)) <= 0)
+    web_log(ERROR, "ERROR", "can not receive data from web browser", n);
+
+web_log(LOG, "REQUEST", rcvBuf, n);
+
+p = strtok(rcvBuf, " ");
+if (strcmp(p, "GET") && strcmp(p, "get"))	// get방식인지 확인
+    web_log(ERROR, "ERROR", "Only get method can support", 0);
+
+p = strtok(NULL, " ");
+if (!strcmp(p, "/"))	// url에 /index.html없이 그냥 ip만 쳤을때 인덱스 페이지로 연결해줌
+    sprintf(uri, "%s/index.html", documentRoot);	// 미리 문서루트 지정한 /home/pi/어쩌구...+url로 받은 주소 /index.html 합성 -> /home/pi.../index.html
+else
+    sprintf(uri, "%s%s", documentRoot, p);		// 그냥 문자열 그대로 붙임
+```
+
+
+## 채팅 프로그램
+- 귓속말, 필터 업그레이드
+- push_client()에서 mutex쓴 이유
