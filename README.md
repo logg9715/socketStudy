@@ -118,3 +118,20 @@ void *func_pthread(void *arg)
     // 함수 내용
 }
 ```
+
+- pthread_join(스레드객체, 스레드 종료시 반환값); : 다른 스레드가 종료될떄까지 기다림
+```C
+int thr_id;
+pthread_t p_thread[2];
+
+int status;
+int b = 5;
+int c = 6;
+
+thr_id = pthread_create(&p_thread[0], NULL, do_sum, (void *)&b);    // 넘길인자 b : (void *)로 캐스팅하고 b의 주소 넘김
+thr_id = pthread_create(&p_thread[1], NULL, do_sum, (void *)&c);
+
+pthread_join(p_thread[0], (void **)&status);
+pthread_join(p_thread[1], (void **)&status);
+```
+
