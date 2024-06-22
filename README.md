@@ -72,7 +72,7 @@ if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 
 ### 시그널 종류
 1. SIGUP : 터미널 끊김, 프로세스 종료
-2. SIGINT : ctrl+c, 프로세스 종료
+2. SIGINT : ctrl+c(인터럽트), 프로세스 종료
 3. SIGQUIT : ctrl+/, 프로세스 종료 + 코어덤프
 9. SIGKILL : 프로세스 무조건 종료 
 10. SIGUSR1 : 사용자 정의 가능한 시그널 
