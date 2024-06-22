@@ -7,3 +7,29 @@
 - int fork(); : 부모=자식프로레스 pid, 자식=0, 실패=-1
 - getpid(); : 현재 프로세스 pid 가져오기
 
+## fork 서버
+
+### fork방식 다중 접속 서버
+```C
+while (1)
+{
+    len = sizeof(c_addr);
+    if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0) { /* 에러처리 */ }
+    if ((pid = fork()) < 0)
+    {
+        printf("echo server can not fork()\n");
+        return -1;
+    }
+    else if (pid > 0)
+    {
+        close(connSock);
+        continue;
+    }
+    else if (pid == 0)
+    {
+        printf("child creat\n");
+        close(listenSock);
+        do_echo(connSock);
+    }
+}
+```
