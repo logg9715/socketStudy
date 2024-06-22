@@ -606,3 +606,4 @@ void web_log(int type, char s1[], char s2[], int n)
 ## 채팅 프로그램
 - 귓속말, 필터 업그레이드
 - push_client()에서 mutex쓴 이유
+[chat_server.c](https://github.com/logg9715/socketStudy/blob/main/%EC%BB%B4%EC%A0%9C%ED%94%84_%EA%B8%B0%EB%A7%90/chat_server_thread.c)
