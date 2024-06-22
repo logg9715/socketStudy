@@ -118,8 +118,8 @@ void *func_pthread(void *arg)
     // 함수 내용
 }
 ```
-
-- pthread_join(스레드객체, 스레드 종료시 반환값); : 다른 스레드가 종료될떄까지 기다림
+- A스레드가 B스레드를 생성했는데 먼저 종료됨 -> B쓰레드가 돌고 있더라도 A와 같이 종료됨 
+- pthread_join(스레드객체, 스레드 종료시 반환값); : 해당 스레드가 종료될떄까지 기다림
 ```C
 int thr_id;
 pthread_t p_thread[2];
@@ -134,4 +134,58 @@ thr_id = pthread_create(&p_thread[1], NULL, do_sum, (void *)&c);
 pthread_join(p_thread[0], (void **)&status);
 pthread_join(p_thread[1], (void **)&status);
 ```
+
+- join 예제
+```C
+void *do_sum(void *data)
+{
+    int i;
+    int sum = 0;
+
+    int max = *((int *)data);
+
+    for (i = 0; i < max; i++)
+    {
+        sum = sum + i;
+        printf("%d - Add %d\n", max, i);
+        sleep(1);
+    }
+    printf("%d - sum(%d)\n", max, sum);
+}
+
+int main()
+{
+    // 대충 변수선언
+    thr_id = pthread_create(&p_thread[0], NULL, do_sum, (void *)&a);
+    thr_id = pthread_create(&p_thread[1], NULL, do_sum, (void *)&b);
+    thr_id = pthread_create(&p_thread[2], NULL, do_sum, (void *)&c);
+
+    pthread_join(p_thread[0], (void **)&status);
+    pthread_join(p_thread[1], (void **)&status);
+    pthread_join(p_thread[2], (void **)&status);
+
+    printf("programing is end\n");
+    return 0;
+}
+/*******************************출력 내용***************************************
+* 4 - Add 0                                                                   *
+* 6 - Add 0                                                                   *
+* 5 - Add 0                                                                   *
+* 4 - Add 1                                                                   *
+* 6 - Add 1                                                                   *
+* 5 - Add 1                                                                   *
+* 4 - Add 2                                                                   *
+* 6 - Add 2                                                                   *
+* 5 - Add 2                                                                   *
+* 4 - Add 3                                                                   *
+* 6 - Add 3                                                                   *
+* 5 - Add 3                                                                   *
+* 4 - sum(6)                                                                  *
+* 6 - Add 4                                                                   *
+* 5 - Add 4                                                                   *
+* 6 - Add 5                                                                   *
+* 5 - sum(10)                                                                 *
+* 6 - sum(15)                                                                 *
+* programing is end                                                           *
+******************************************************************************/
 
