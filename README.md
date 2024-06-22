@@ -205,9 +205,9 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 뮤텍스가 없으면 추가&삭제에 오류가 생길수도 있고 귓속말 등이 이상한 곳으로 전송될 수도 있다.
 
 ## TCP 내부 동작
-- 일련번호(Sequene Number) : "n에 대한 대답임"의미, 순서대로 데이터를 보내기 위한 일련번호
-- 확인번호(Acknowledgement Number) : "이것에 대한 대답은 이쪽으로(N) 해라"의미
-- 아니면, 일련번호로 먼저 번호 들어옴 -> ack번호에 일련번호+1로 응답하는 구조일수도 있음
+- 일련번호(Sequene Number) : 순서대로 데이터를 보내기 위한 일련번호
+- 확인번호(Acknowledgement Number) : 일련번호에 대한 응답용
+- 일련번호로 먼저 번호 들어옴 -> ack번호에 일련번호+1로 응답하는 구조
 <br>
 
 ### 연결 준비 단계 (3-way-handshaking) : connect()
@@ -215,12 +215,148 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 ![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/34602903-89b1-4ac5-a087-f3ddbf0b4992)
 
 0. 서버는 bind(), listen()호출해서 LISTEN상태로 변함, accept() 호출해서 블록 상태로 클라이언트 기다림
-1. SYN : 클라이언트가 SYN비트 1 소켓 전송, SYN_SEND상태가 됨.
-2. SYN_ACK : 서버가 SYN비트 1 ACK비트 1 소켓 전송, SYN_RCVD상태가 됨.
-3. ACK : 클라가 확인 의미로 ACK비트 1 소켓 전송, ESTABLISHED(송수신 가능)상태가 됨, 서버도 이걸 받고 ESTABLISHED상태가 됨.
+1. SYN : 클라이언트가 SYN비트 1 패킷 전송, SYN_SEND상태가 됨.
+2. SYN_ACK : 서버가 SYN비트 1 ACK비트 1 패킷 전송, SYN_RCVD상태가 됨.
+3. ACK : 클라가 확인 의미로 ACK비트 1 패킷 전송, ESTABLISHED(송수신 가능)상태가 됨, 서버도 이걸 받고 ESTABLISHED상태가 됨.
 
 ### 연결 종료 단계 (4-way-handshaking) : close()
     
 ![image](https://github.com/logg9715/socketStudy/assets/127168700/97dcc659-2e07-4e28-91da-327ebb2abb93)
 
-0. snf
+0. 클라이언트가 종료 시작한 상황
+1. FIN : 클라가 FIN 패킷 전송, FIN_WAIT_1상태로 대기
+2. ACK : 서버가 수신한 일련번호+1로 확인번호 쓴 ACK 패킷 전송, CLOSE_WAIT상태 들어감, 서버 작업 정리 시작
+3. FIN : 서버가 모든 작업 끝내고 close()호출, 서버가 일련번호+1+1을 확인번호 쓴 FIN패킷 전송
+4. ACK : 대기하던 클라가 FIN을 수신하면 FIN_WAIT_2상태로 변함, 수신한 번호+1의 확인번호 쓴 ACK 패킷 전송, 일정시간동안 TIME_WAIT로 대기 후 나중에 종료
+5. 서버는 ACK를 받자마자 바로 CLOSE상태 됨.
+
+## 소켓 옵션 변경
+- getsockopt(소켓번호, 코드 모듈 타입, 읽을 옵션이름, 옵션값 저장할 인자, 옵션값의 메모리 크기); : 현재 옵션 확인, 성공시 0 실패시 -1 반환
+- setsockopt(인자 같음); : 옵션 바꾸기, 성공시 0 실패시 -1 반환
+
+### linger 추가 (SO_LINGER) : close()할때 출력 스트림에 남아있는 데이터 처리 방식 
+- l_onoff = 0 : close()즉시 return, 종료가 어떻게되는지 모름
+- l_onoff = 1, l_linger = 0 : 즉시 리턴, 출력 스트림에 남은 데이터 버림, 비정상 종료
+- l_onoff = 1, l_linger = 0아닌 정수 : 정상종료까지 리턴하지 않음, l_linger의 시간까지 기다리고 넘으면 비정상종료 진행
+
+```C
+// linger 옵션 추가
+struct linger optval;
+optval.l_onoff = 1;
+optval.l_linger = 10;
+setsockopt(sock, SOL_SOCKET, SO_LINGER, (char *)&optval, sizeof(optval));
+```
+
+### 송수신 버퍼 길이 바꾸기 (SO_RCVBUF, SO_SNDBUF)
+- 송수신 버퍼 길이를 넘은 데이터는 수신측에서 짤림
+- connect()나 listen() 전에 수정해야 적용됨, accept()로 얻은 소켓에 수정해도 적용 안됨.
+```
+// 버퍼 길이 2배로 늘리기
+int optval_;
+int optlen_ = sizeof(optval_);
+getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char *)&optval_, &optlen_);
+
+optval_ *= 2;
+setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char *)&optval_, sizeof(optval_));
+```
+
+## RAW소켓 
+
+### RAW소켓 생성방법
+- sd = socket(AF_INET, SOCK_RAW, 프로토콜 종류);
+- AF_INET : IPv4 국룰 옵션
+- 프로토콜 종류 : IPPROTO_ICMP(핑), IPPROTO_TCP(tcp), IPPROTO_UDP(udp)
+
+### 무차별 모드
+- NIC(Network Interface Card)는 기본적으로 자신 mac으로 온 데이터가 아니면 폐기함.
+- 무차별 모드는 모든 mac에 대한 데이터를 읽을 수 있음, 부하 문제 때문에 기본적으로 꺼져있다.
+> wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+- sudo ifconfig 카드종류(wlan0) promisc : 무차별 모드 켤 수 있음, - 붙이면 꺼짐
+> wlan0: flags=4419<UP,BROADCAST,RUNNING,PROMISC,MULTICAST>  mtu 1500 // running 뒤에 promisc옵션이 보이게 된다. 
+
+### raw소켓으로 전송받은 데이터 읽기
+```C
+// read_packet.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+
+void print_ip(struct iphdr *);
+void print_tcp(struct tcphdr *);
+
+main()
+{
+	int sd;
+	int len;
+
+	int rx_packet_size = sizeof(struct iphdr) + sizeof(struct tcphdr);
+	char *rx_packet = malloc(rx_packet_size);
+
+	struct tcphdr *rx_tcph;
+	struct iphdr *rx_iph;
+
+	struct in_addr s_addr, d_addr;
+	struct sockaddr_in local, remote;
+
+	struct servent *serv;
+
+	if ((sd = socket(PF_INET, SOCK_RAW, IPPROTO_TCP)) < 0)	// raw소켓 생성
+	{
+		printf("socket open error\n");
+		exit(-1);
+	}
+
+	while (1)
+	{
+		bzero(rx_packet, rx_packet_size);
+
+		len = sizeof(local);
+		/* rx_packet버퍼로 자료를 받아옴. */
+		if (recvfrom(sd, rx_packet, rx_packet_size, 0x0, (struct sockaddr *)&local, &len) < 0)
+		{
+			printf("recvfrom error\n");
+			exit(-2);
+		}
+		
+		// raw소켓 정보 읽을 헤더 위치 맞추기
+		rx_iph = (struct iphdr *)(rx_packet);
+		rx_tcph = (struct tcphdr *)(rx_packet + rx_iph->ihl * 4);
+
+		print_ip(rx_iph);	// ip정보 읽기, 대체로 4,5,6 나옴
+		print_tcp(rx_tcph);	// 포트정보 + 패킷 ACK, SYN같은 제어비트 내용 읽기
+	}
+
+	close(sd);
+}
+
+void print_ip(struct iphdr *iph)
+{
+	printf("[IP  HEADER] VER: %1u HL : %2u Protocol : %3u ", iph->version, iph->ihl, iph->protocol);
+	printf("SRC  IP: %x ", iph->saddr);
+	printf("DEST IP: %x \n", iph->daddr);
+}
+
+void print_tcp(struct tcphdr *tcph)
+{
+	printf("[TCP HEADER] src port: %5u dest port : %5u  ", ntohs(tcph->source), ntohs(tcph->dest));
+
+	(tcph->urg == 1) ? printf("U") : printf("-");
+	(tcph->ack == 1) ? printf("A") : printf("-");
+	(tcph->psh == 1) ? printf("P") : printf("-");
+	(tcph->rst == 1) ? printf("R") : printf("-");
+	(tcph->syn == 1) ? printf("S") : printf("-");
+	(tcph->fin == 1) ? printf("F") : printf("-");
+	printf("\n\n");
+}
+```
+- 출력 결과
+    
+![image](https://github.com/logg9715/socketStudy/assets/127168700/35fa42c8-3dc7-4830-b194-b99c2ed710bb)
+    
+### my_ping.c 
+
