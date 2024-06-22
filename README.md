@@ -208,6 +208,8 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 일련번호(Sequene Number) : n에 대한 대답임
 - 확인번호(Acknowledgement Number) : 이것에 대한 대답은 이쪽으로(N) 해라 
 <br>
-![image](https://github.com/logg9715/socketStudy/assets/127168700/9110cf6c-15a1-4d37-9ea5-e349e54aa115)
+![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/27abbbad-80d5-492c-a99f-896c3774c213)
+
+
 
 
