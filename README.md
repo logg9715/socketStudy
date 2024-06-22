@@ -209,6 +209,7 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 확인번호(Acknowledgement Number) : "이것에 대한 대답은 이쪽으로(N) 해라"의미
 - 아니면, 일련번호로 먼저 번호 들어옴 -> ack번호에 일련번호+1로 응답하는 구조일수도 있음
 <br>
+
 ### 연결 준비 단계 (3-way-handshaking)
     
 ![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/34602903-89b1-4ac5-a087-f3ddbf0b4992)
