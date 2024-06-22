@@ -204,5 +204,9 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 클라이언트가 연결되면 배열에 추가되고, 접속이 끊기면 삭제한다.
 - 뮤텍스가 없으면 추가&삭제에 오류가 생길수도 있고 귓속말 등이 이상한 곳으로 전송될 수도 있다.
 
-
+## TCP 내부 동작
+- 일련번호(Sequene Number) : n에 대한 대답임
+- 확인번호(Acknowledgement Number) : 이것에 대한 대답은 이쪽으로(N) 해라 
+<br>
+![image](https://github.com/logg9715/socketStudy/assets/127168700/637e03b0-3f6c-4713-ac76-40b1ddb3f3c2)
 
