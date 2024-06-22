@@ -62,7 +62,7 @@ void sigHandler(int sig)
 ```C
 if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 {
-    /* accept 도중에 SIGCHLD로 처리기 실행되고 돌아오면, EINTR코드가 accept함수 값으로 반환되서 도는걸 처리 */
+    /* accept 도중에 SIGCHLD로 처리기 실행되고 돌아오면, EINTR코드가 accept함수 값으로 반환된다. */
     if (errno == EINTR)
         continue;
     else
