@@ -70,5 +70,9 @@ if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 }
 ```
 
+### 시그널 종류
+1. ㅇㄹㄴㅁ
+2. 1ㄹㄷㅈ
+3. ㄹㄷㅈ
 
 
