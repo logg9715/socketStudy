@@ -135,7 +135,7 @@ pthread_join(p_thread[0], (void **)&status);
 pthread_join(p_thread[1], (void **)&status);
 ```
 
-- join 예제
+- join 예제 (출력결과 시험에 나올수도)
 ```C
 void *do_sum(void *data)
 {
@@ -188,4 +188,15 @@ int main()
 * 6 - sum(15)                                                                 *
 * programing is end                                                           *
 ******************************************************************************/
+```
+
+- 뮤텍스 : 전역변수의 '임계 영역'문제 해결용, 여러명이 동시에 변수 접근할때 겹치는 문제 막기
+```C
+pthread_mutex_t  mutex = PTHREAD_MUTEX_INITIALIZER;    // 뮤텍스 초기화
+
+pthread_mutex_lock(&mutex);    // 뮤텍스 잠그기
+/* 명령 수행... */
+pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
+```
+
 
