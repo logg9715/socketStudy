@@ -209,7 +209,8 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 확인번호(Acknowledgement Number) : 이것에 대한 대답은 이쪽으로(N) 해라 
 <br>
 
-![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/d8e94763-aac8-4553-9715-cacf7a897e27)
 
+
+![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/34602903-89b1-4ac5-a087-f3ddbf0b4992)
 
 
