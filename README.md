@@ -71,25 +71,17 @@ if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 ```
 
 ### 시그널 종류
-1. SIGUP
-2. SIGINT
-3. SIGQUIT
-4. SIGILL
-5. SIGTRAP
-6. SIGABRT
-7. SIGBUS
-8. SIGFPE
-9. SIGKILL
-10. SIGUSR1
-11. SIGSEGV
-12. SIGUSR2
-13. SIGPIPE
-14. SIGALRM
-15. SIGTERM
-17. SIGCHLD
-18. SIGCONT
-19. SIGSTOP
-20. SIGTSTP
+1. SIGUP : 터미널 끊김
+2. SIGINT : ctrl+c, 프로세스 종료
+3. SIGQUIT : ctrl+/, 프로세스 종료 + 코어덤프
+9. SIGKILL : 프로세스 무조건 종료 
+10. SIGUSR1 : 사용자 정의 가능한 시그널 
+11. SIGSEGV : 세그멘테이션 오류, 포인터 관련
+12. SIGUSR2 : 사용자 정의2
+14. SIGALRM : 타이머
+15. SIGTERM : 프로세스 정상종료 
+17. SIGCHLD : 자식프로세스 종료시 부모에게 알림 
+20. SIGTSTP : ctrl+z, 프로세스 정지 
 
 ## 쓰레드 서버
 ### thread
