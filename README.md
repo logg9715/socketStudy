@@ -98,7 +98,7 @@ if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 - 시스템 호출 등으로 블록당해도 다른 스레드가 계속 작동
 - 동일 프로세스 내 스레드끼리 자원&메모리 공유
 
-- 프로세스, 스레드, 함수 비교 \n
+- 프로세스, 스레드, 함수 비교 <br>
 ![image](https://github.com/logg9715/socketStudy/assets/127168700/e714cba2-7053-4fd4-8a5f-df3cec401ad7)
 
 - pthread_create(pthread_t, 옵션, 함수, 넘길인자); : 성공시 pthread_t에 식별자 저장하고 0 반환, 실패시 에러코드 반환
