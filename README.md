@@ -15,17 +15,17 @@ while (1)
 {
     len = sizeof(c_addr);
     if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0) { /* 에러처리 */ }
-    if ((pid = fork()) < 0)
+    if ((pid = fork()) < 0)    // 0. fork() 생성 & 에러처리
     {
         printf("echo server can not fork()\n");
         return -1;
     }
-    else if (pid > 0)
+    else if (pid > 0)        // 1. 부모 프로세스 : 연결 닫고 accept()로 돌아감
     {
         close(connSock);
         continue;
     }
-    else if (pid == 0)
+    else if (pid == 0)       // 2. 자식 프로세스 : listen() 닫고 연결된 소켓 채팅 처리 담당
     {
         printf("child creat\n");
         close(listenSock);
