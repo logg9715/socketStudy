@@ -205,12 +205,14 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 뮤텍스가 없으면 추가&삭제에 오류가 생길수도 있고 귓속말 등이 이상한 곳으로 전송될 수도 있다.
 
 ## TCP 내부 동작
-- 일련번호(Sequene Number) : n에 대한 대답임
-- 확인번호(Acknowledgement Number) : 이것에 대한 대답은 이쪽으로(N) 해라 
+- 일련번호(Sequene Number) : "n에 대한 대답임"의미, 순서대로 데이터를 보내기 위한 일련번호
+- 확인번호(Acknowledgement Number) : "이것에 대한 대답은 이쪽으로(N) 해라"의미
+- 아니면, 일련번호로 먼저 번호 들어옴 -> ack번호에 일련번호+1로 응답하는 구조일수도 있음
 <br>
-
-
-
+### 연결 준비 단계 (3-way-handshaking)
 ![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/34602903-89b1-4ac5-a087-f3ddbf0b4992)
-
+0. 서버는 bind(), listen()호출해서 LISTEN상태로 변함, accept() 호출해서 블록 상태로 클라이언트 기다림
+1. SYN : 클라이언트가 SYN비트 1 소켓 전송, SYN_SEND상태가 됨.
+2. SYN_ACK : 서버가 SYN비트 1 ACK비트 1 소켓 전송, SYN_RCVD상태가 됨.
+3. ACK : 클라가 확인 의미로 ACK비트 1 소켓 전송, ESTABLISHED(송수신 가능)상태가 됨, 서버도 이걸 받고 ESTABLISHED상태가 됨.
 
