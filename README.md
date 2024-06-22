@@ -551,6 +551,8 @@ cksum_in(unsigned short *addr, int len)
 - strtok(*문자열, 자를문자); : 자를문자를 종료문자로 바꾸고 헤더 포인터 반환
 - 문자열이 null이면, 그전에 잘랐던 문자에서 다음 자를문자를 찾고 새로운 헤더 포인터 반환
 ```C
+// Request Line 보통 형태 : "get /index.html HTTP/1.0"
+
 if ((n = read(c_sock, rcvBuf, BUFSIZ)) <= 0)
     web_log(ERROR, "ERROR", "can not receive data from web browser", n);
 
@@ -561,11 +563,43 @@ if (strcmp(p, "GET") && strcmp(p, "get"))	// get방식인지 확인
     web_log(ERROR, "ERROR", "Only get method can support", 0);
 
 p = strtok(NULL, " ");
-if (!strcmp(p, "/"))	// url에 /index.html없이 그냥 ip만 쳤을때 인덱스 페이지로 연결해줌
+if (!strcmp(p, "/"))	// url에 /index.html없이 그냥 ip만 쳤을때(그 경우엔 url에 "/"만 있음) 인덱스 페이지로 연결해줌
     sprintf(uri, "%s/index.html", documentRoot);	// 미리 문서루트 지정한 /home/pi/어쩌구...+url로 받은 주소 /index.html 합성 -> /home/pi.../index.html
 else
     sprintf(uri, "%s%s", documentRoot, p);		// 그냥 문자열 그대로 붙임
+
+p = strtok(NULL, "\r\n "); 	// http 버젼 읽기
 ```
+    
+- web_log()에서 mutex사용
+```C
+void web_log(int type, char s1[], char s2[], int n)
+{
+	int log_fd;
+	char buf[BUFSIZ];
+
+	if (type == LOG)
+	{
+		sprintf(buf, "STATUS %s %s %d\n", s1, s2, n);
+	}
+	else if (type == ERROR)
+	{
+		sprintf(buf, "ERROR %s %s %d\n", s1, s2, n);
+	}
+
+	pthread_mutex_lock(&mutex);
+	if ((log_fd = open("web.log", O_CREAT | O_WRONLY | O_APPEND, 0644)) >= 0)
+	{
+		write(log_fd, buf, strlen(buf));
+		close(log_fd);
+	}
+	pthread_mutex_unlock(&mutex);
+
+	if (type == ERROR)
+		exit(-1);
+}
+```
+
 
 
 ## 채팅 프로그램
