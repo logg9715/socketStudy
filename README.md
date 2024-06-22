@@ -210,7 +210,7 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 - 아니면, 일련번호로 먼저 번호 들어옴 -> ack번호에 일련번호+1로 응답하는 구조일수도 있음
 <br>
 
-### 연결 준비 단계 (3-way-handshaking)
+### 연결 준비 단계 (3-way-handshaking) : connect()
     
 ![화면 캡처 2024-06-22 215247](https://github.com/logg9715/socketStudy/assets/127168700/34602903-89b1-4ac5-a087-f3ddbf0b4992)
 
@@ -219,3 +219,8 @@ pthread_mutex_unlock(&mutex);    // 뮤텍스 잠금 풀기
 2. SYN_ACK : 서버가 SYN비트 1 ACK비트 1 소켓 전송, SYN_RCVD상태가 됨.
 3. ACK : 클라가 확인 의미로 ACK비트 1 소켓 전송, ESTABLISHED(송수신 가능)상태가 됨, 서버도 이걸 받고 ESTABLISHED상태가 됨.
 
+### 연결 종료 단계 (4-way-handshaking) : close()
+    
+![image](https://github.com/logg9715/socketStudy/assets/127168700/97dcc659-2e07-4e28-91da-327ebb2abb93)
+
+0. snf
