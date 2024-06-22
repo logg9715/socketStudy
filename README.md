@@ -571,7 +571,8 @@ else
 p = strtok(NULL, "\r\n "); 	// http 버젼 읽기
 ```
     
-- web_log()에서 mutex사용
+- web_log()에서 mutex사용 : 스레드 방식 사용시
+- 다수의 스레드에서 동시에 로그파일을 열고 작성할 경우 충돌 방지
 ```C
 void web_log(int type, char s1[], char s2[], int n)
 {
@@ -587,7 +588,8 @@ void web_log(int type, char s1[], char s2[], int n)
 		sprintf(buf, "ERROR %s %s %d\n", s1, s2, n);
 	}
 
-	pthread_mutex_lock(&mutex);
+	/* 여기 나올듯 */
+	pthread_mutex_lock(&mutex);	// 뮤텍스를 얻어야만 파일을 열고 로그를 쓸 수 있음 
 	if ((log_fd = open("web.log", O_CREAT | O_WRONLY | O_APPEND, 0644)) >= 0)
 	{
 		write(log_fd, buf, strlen(buf));
@@ -599,7 +601,6 @@ void web_log(int type, char s1[], char s2[], int n)
 		exit(-1);
 }
 ```
-
 
 
 ## 채팅 프로그램
