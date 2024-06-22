@@ -35,3 +35,40 @@ while (1)
     }
 }
 ```
+
+### 좀비 프로세스 처리
+- 자식 프로세스의 연결이 종료되면 보고가 되지 않아서 좀비 프로세스로 남음(defunct)
+- 자식 프로세스 종료시에 발생하는 SIGCHLD 시그널 감지기를 넣고 종료처리를 추가해준다.
+```C
+/* 시그널 처리기 등록*/ 
+struct sigaction act; // sigaction 구조체 선언
+
+act.sa_handler = sigHandler; // 시그널 처리기 동작 함수 지정
+sigemptyset(&act.sa_mask);   // sa 마스크 0으로 설정
+act.sa_flags = 0;            // 옵션 0
+
+state = sigaction(SIGCHLD, &act, 0); // 시그널 처리기 등록
+
+...
+
+void sigHandler(int sig)
+{
+    int pid, status;
+    pid = wait(&status); /* 부모 프로세스가 자식 프로세스 종료 상태가 올때까지 대기, 종료시 반환값 반환  */
+    printf("pid[%d] terminate\n", pid);
+}
+```
+- EINTR 에러 반환으로 무한로프 도는 것 막기
+```C
+if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
+{
+    /* accept 도중에 SIGCHLD로 처리기 실행되고 돌아오면, EINTR코드가 accept함수 값으로 반환되서 도는걸 처리 */
+    if (errno == EINTR)
+        continue;
+    else
+        printf("accept error\n");    // 그냥 accept 에러 처리
+}
+```
+
+
+
