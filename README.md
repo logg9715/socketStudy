@@ -91,4 +91,13 @@ if ((connSock = accept(listenSock, (struct sockaddr *)&c_addr, &len)) < 0)
 19. SIGSTOP
 20. SIGTSTP
 
+## 쓰레드 서버
+### thread
+- 하나의 프로세스에 다수의 스레드 소유 가능
+- 레지스터(연산장치) & 스택 영역 독립, 그 외의 코드 데이터 소켓 등은 공유
+- 시스템 호출 등으로 블록당해도 다른 스레드가 계속 작동
+- 동일 프로세스 내 스레드끼리 자원&메모리 공유
+
+### 프로세스, 스레드, 함수 비교
+![image](https://github.com/logg9715/socketStudy/assets/127168700/e714cba2-7053-4fd4-8a5f-df3cec401ad7)
 
