@@ -361,15 +361,7 @@ void print_tcp(struct tcphdr *tcph)
 ### my_ping.c 
 - RAW 소켓을 통해 ICMP 에코 요청 메시지를 보내 핑체크 실행
 ```C
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in_systm.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
-#include <signal.h>
+// my_ping.c
 
 void sig_alrm(int);
 void send_msg(void);
